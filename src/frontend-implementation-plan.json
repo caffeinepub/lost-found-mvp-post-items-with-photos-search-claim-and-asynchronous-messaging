@@ -1,0 +1,24 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Fix feedback page to use caller-scoped feedback retrieval",
+  "requirements": [
+    {
+      "id": "REQ-14",
+      "summary": "Update the feedback React Query hook to fetch the signed-in caller’s feedback via the caller-scoped backend method so non-admin users can view their own feedback.",
+      "acceptanceCriteria": [
+        "frontend/src/hooks/useFeedback.ts uses the caller-scoped backend method (e.g., actor.getCallerFeedback()) for the ['feedback','caller'] query.",
+        "A signed-in non-admin user can load /feedback and see their previous feedback entries (if any) without receiving an authorization error.",
+        "Submitting feedback still works and the list updates after submission via React Query invalidation.",
+        "No changes are made to any files under frontend/src/components/ui or other immutable paths listed in SYSTEM_CONTEXT."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useFeedback.ts",
+          "operation": "modify",
+          "description": "Replace the current admin-only feedback retrieval (getAllFeedback) with the caller-scoped backend capability (getCallerFeedback) for the ['feedback','caller'] query. Keep React Query behavior consistent (enabled gating via actor availability, retry: false) and preserve existing invalidation so the list refreshes after submit. Use the authorization component’s guidance for authenticated data access (only fetch app data when logged in; handle Unauthorized traps gracefully via existing UI error mapping). Verify the component's usage instructions before implementing."
+        }
+      ]
+    }
+  ]
+}

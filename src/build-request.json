@@ -1,0 +1,58 @@
+{
+  "kind": "build_request",
+  "title": "Fix and complete user feedback handling (caller-scoped retrieval)",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-13",
+      "text": "Add a backend query endpoint to retrieve only the signed-in caller’s feedback entries (caller-scoped feedback list) so non-admin users can view their own submitted feedback without requiring admin access.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "add support for handling user feedback"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend exposes a query method (e.g., getCallerFeedback) that returns only FeedbackEntry records where entry.user == caller.",
+        "The method enforces the same authenticated user permission check used elsewhere (non-authenticated callers are rejected).",
+        "The existing admin-only getAllFeedback behavior remains unchanged (still restricted to admins)."
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "text": "Update the frontend feedback data hook to call the new caller-scoped backend feedback endpoint instead of calling the admin-only getAllFeedback, so the Feedback page works for regular authenticated users.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "add support for handling user feedback"
+        ]
+      },
+      "acceptanceCriteria": [
+        "frontend/src/hooks/useFeedback.ts uses the caller-scoped backend method (e.g., actor.getCallerFeedback()) for the ['feedback','caller'] query.",
+        "A signed-in non-admin user can load /feedback and see their previous feedback entries (if any) without receiving an authorization error.",
+        "Submitting feedback still works and the list updates after submission via React Query invalidation.",
+        "No changes are made to any files under frontend/src/components/ui or other immutable paths listed in SYSTEM_CONTEXT."
+      ]
+    }
+  ],
+  "constraints": [
+    "Backend must remain a single-actor Motoko canister; all logic stays in backend/main.mo.",
+    "Do not edit immutable frontend paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, and anything under frontend/src/components/ui.",
+    "Use English for any user-facing text."
+  ],
+  "nonGoals": [
+    "Building an admin UI for reviewing all users’ feedback.",
+    "Adding third-party integrations (email, chat, ticketing, analytics) for feedback handling.",
+    "Changing the visual theme or adding new branding assets."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

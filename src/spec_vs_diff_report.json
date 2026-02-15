@@ -1,0 +1,24 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-15T05:55:34.431Z",
+  "summary": "REQ-13 and REQ-14 appear to be implemented: backend adds a caller-scoped feedback query and frontend hook switches to it. However, the backend implementation of getCallerFeedback is truncated in the diff, so it’s not fully verifiable that it returns the filtered array correctly.",
+  "missing_requirements": [
+    {
+      "id": "REQ-13",
+      "requirement": "Backend caller-scoped feedback query returns only the caller’s FeedbackEntry records (entry.user == caller).",
+      "reason": "The new getCallerFeedback method is shown but the diff is truncated mid-function (ends at `feedbackForCal...`), so it cannot be confirmed that it completes the loop and returns `feedbackForCaller.toArray()` (or equivalent) as required.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    }
+  ],
+  "hallucinated_features": [],
+  "confidence": 0.62,
+  "changed_files": [
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/src/hooks/useFeedback.ts",
+    "project_state.json"
+  ]
+}

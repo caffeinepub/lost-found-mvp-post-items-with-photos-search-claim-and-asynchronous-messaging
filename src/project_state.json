@@ -1,0 +1,195 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 7,
+  "summary": "Lost-and-found platform web app where finders can post found items with photos and details, owners can report/search for lost items, get match suggestions, securely message to verify ownership, and track item status through return.",
+  "architectural_notes": [
+    "MVP focus: item posting + search/basic matching + secure messaging/chat.",
+    "Tech stack direction: Web UI (React/Next.js/Angular) with backend API (Node/Express or Django REST).",
+    "Data/storage options: PostgreSQL or MongoDB; image storage via S3 or Firebase Storage.",
+    "Authentication provider option: Firebase Auth or Auth0.",
+    "Push notifications option: Firebase Cloud Messaging.",
+    "Next focus: implement backend support for user-submitted feedback (authenticated submit + authorized read endpoints)."
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-implement-internet-identity-authentication-and-a-basic-user-profile-in-the-app-principal-based-identity-including-ui-for-sign-in-sign-out-and-showing-the-signed-in-user-s-identity-on-relevant-screens",
+      "title": "Implement Internet Identity authentication and a basic user profile in the app (principal-based identity), including UI for sign-in/sign-out and showing the signed-in user's identity on relevant screens.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-frontend-forms-to-report-a-lost-item-and-a-found-item-with-fields-item-name-title-description-category-location-city-area-text-date-time-and-optional-photo-upload-with-client-side-validation-and-a-clear-preview-remove-flow",
+      "title": "Build frontend forms to report a Lost Item and a Found Item with fields: item name/title, description, category, location (city/area text), date/time, and optional photo upload with client-side validation and a clear preview/remove flow.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-item-browsing-and-search-on-the-frontend-with-keyword-category-filters-and-basic-matching-views-e-g-showing-potentially-relevant-found-items-when-viewing-a-lost-item-and-vice-versa-using-text-based-similarity-no-external-ai-services",
+      "title": "Implement item browsing and search on the frontend with keyword + category filters and basic matching views (e.g., showing potentially relevant Found items when viewing a Lost item, and vice versa) using text-based similarity (no external AI services).",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-item-detail-page-that-supports-the-claim-return-flow-owners-can-initiate-a-claim-conversation-with-the-finder-and-item-owners-post-creators-can-update-the-item-status-to-claimed-returned-still-missing-with-appropriate-permission-checks",
+      "title": "Add an item detail page that supports the claim/return flow: owners can initiate a claim conversation with the finder, and item owners/post creators can update the item status to Claimed/Returned/Still missing with appropriate permission checks.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-secure-in-app-asynchronous-messaging-system-non-real-time-tied-to-a-specific-item-and-two-participants-poster-and-claimant-including-creating-a-conversation-sending-messages-listing-conversations-for-the-signed-in-user-and-viewing-a-conversation-thread",
+      "title": "Implement a secure in-app asynchronous messaging system (non-real-time) tied to a specific item and two participants (poster and claimant), including: creating a conversation, sending messages, listing conversations for the signed-in user, and viewing a conversation thread.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-cohesive-creative-visual-theme-across-the-mvp-ui-colors-typography-spacing-and-components-appropriate-for-a-community-lost-and-found-safety-trust-context-avoid-blue-purple-as-primary-colors-unless-explicitly-requested-by-the-user",
+      "title": "Apply a cohesive, creative visual theme across the MVP UI (colors, typography, spacing, and components) appropriate for a community lost-and-found safety/trust context; avoid blue/purple as primary colors unless explicitly requested by the user.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-lightweight-safety-and-privacy-ux-for-contact-ensure-the-app-does-not-expose-phone-email-fields-publicly-and-provide-guidance-text-in-the-messaging-ui-encouraging-safe-meetup-practices-purely-informational-no-external-integrations",
+      "title": "Add lightweight safety and privacy UX for contact: ensure the app does not expose phone/email fields publicly, and provide guidance text in the messaging UI encouraging safe meetup practices (purely informational, no external integrations).",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-generate-and-include-required-static-images-logo-simple-illustrations-as-build-assets-and-render-them-in-the-ui-stored-under-frontend-public-assets-generated",
+      "title": "Generate and include required static images (logo + simple illustrations) as build assets and render them in the UI (stored under frontend/public/assets/generated).",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-frontend-feedback-page-with-a-simple-form-to-submit-feedback-feature-requests-and-a-lightweight-view-of-the-user-s-previously-submitted-entries",
+      "title": "Add a frontend Feedback page with a simple form to submit feedback/feature requests and a lightweight view of the user’s previously submitted entries.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-navigation-entry-points-so-authenticated-users-can-discover-and-reach-the-feedback-page-from-the-existing-app-shell",
+      "title": "Add navigation entry points so authenticated users can discover and reach the Feedback page from the existing app shell.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-frontend-feedback-data-hook-to-call-the-new-caller-scoped-backend-feedback-endpoint-instead-of-calling-the-admin-only-getallfeedback-so-the-feedback-page-works-for-regular-authenticated-users",
+      "title": "Update the frontend feedback data hook to call the new caller-scoped backend feedback endpoint instead of calling the admin-only getAllFeedback, so the Feedback page works for regular authenticated users.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "User registration & authentication (email/phone/social) with optional account verification",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Lost item reporting form (name, description, photo, last-seen location, date) with categories/tags",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Found item reporting form (description, photo, location found, date/time) with categories/tags",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Search & match system with keyword/category search and geolocation filtering (radius/city/GPS)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Secure in-app messaging/masked contact between finder and claimant with optional mediation",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Item status lifecycle updates (claimed/returned/still missing)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Notifications (email/push) for possible matches and message replies",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "User reputation/feedback system to improve trust and accountability",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Smart matching enhancement (AI-assisted text similarity and optional image recognition)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Optional monetization features (premium boosted posts/advanced search, partnerships, sponsored listings)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Create backend data models and APIs for Lost and Found item posts, including: type (lost/found), title/name, description, category tag, location text (e.g., city/area), date/time (as provided by user), optional photo, createdBy (principal), status lifecycle (e.g., Missing/Claimed/Returned), and createdAt timestamp.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Add backend support for collecting and reading user-submitted feedback/feature requests, including an authenticated submit endpoint and read endpoints with appropriate authorization.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Add a backend query endpoint to retrieve only the signed-in caller’s feedback entries (caller-scoped feedback list) so non-admin users can view their own submitted feedback without requiring admin access.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Lost & Found MVP: Post items with photos, search, claim, and asynchronous messaging",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

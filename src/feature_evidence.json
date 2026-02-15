@@ -1,0 +1,25 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-update-the-frontend-feedback-data-hook-to-call-the-new-caller-scoped-backend-feedback-endpoint-instead-of-calling-the-admin-only-getallfeedback-so-the-feedback-page-works-for-regular-authenticated-users",
+      "featureTitle": "Update the frontend feedback data hook to call the new caller-scoped backend feedback endpoint instead of calling the admin-only getAllFeedback, so the Feedback page works for regular authenticated users.",
+      "files": [
+        "frontend/src/hooks/useFeedback.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-14"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

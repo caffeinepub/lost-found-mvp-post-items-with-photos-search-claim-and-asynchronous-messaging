@@ -1,0 +1,49 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-15T05:55:34.433Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 2,
+    "implemented": 1,
+    "items": [
+      {
+        "id": "REQ-13",
+        "summary": "Add a backend query endpoint to retrieve only the signed-in caller’s feedback entries (caller-scoped feedback list) so non-admin users can view their own submitted feedback without requiring admin access.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-14",
+        "summary": "Update the frontend feedback data hook to call the new caller-scoped backend feedback endpoint instead of calling the admin-only getAllFeedback, so the Feedback page works for regular authenticated users.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useFeedback.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useFeedback.ts"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/main.mo",
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useFeedback.ts",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

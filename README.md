@@ -1,2 +1,3 @@
-# lost-found-mvp-post-items-with-photos-search-claim-and-asynchronous-messaging
-Exported from Caffeine project: Lost &amp; Found MVP: Post items with photos, search, claim, and asynchronous messaging
+## 
+
+To run app build and run docker image: `docker build -t app . docker run -it --network host app`
