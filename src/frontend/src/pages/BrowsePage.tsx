@@ -1,41 +1,45 @@
-import { useState } from 'react';
-import { useSearchItems } from '../hooks/useQueries';
-import { ItemType } from '../backend';
-import ItemCard from '../components/items/ItemCard';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Search, Loader2 } from 'lucide-react';
+} from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Loader2, Search } from "lucide-react";
+import { useState } from "react";
+import { ItemType } from "../backend";
+import ItemCard from "../components/items/ItemCard";
+import { useSearchItems } from "../hooks/useQueries";
 
 const CATEGORIES = [
-  'All Categories',
-  'Electronics',
-  'Pets',
-  'Wallets',
-  'Jewelry',
-  'Keys',
-  'Bags',
-  'Clothing',
-  'Documents',
-  'Other',
+  "All Categories",
+  "Electronics",
+  "Pets",
+  "Wallets",
+  "Jewelry",
+  "Keys",
+  "Bags",
+  "Clothing",
+  "Documents",
+  "Other",
 ];
 
 export default function BrowsePage() {
-  const [keyword, setKeyword] = useState('');
-  const [category, setCategory] = useState('All Categories');
-  const [itemType, setItemType] = useState<'all' | ItemType>('all');
+  const [keyword, setKeyword] = useState("");
+  const [category, setCategory] = useState("All Categories");
+  const [itemType, setItemType] = useState<"all" | ItemType>("all");
 
-  const searchCategory = category === 'All Categories' ? null : category;
-  const searchItemType = itemType === 'all' ? null : itemType;
+  const searchCategory = category === "All Categories" ? null : category;
+  const searchItemType = itemType === "all" ? null : itemType;
 
-  const { data: items = [], isLoading } = useSearchItems(keyword, searchCategory, searchItemType);
+  const { data: items = [], isLoading } = useSearchItems(
+    keyword,
+    searchCategory,
+    searchItemType,
+  );
 
   return (
     <div className="container py-8 space-y-6">
@@ -79,7 +83,10 @@ export default function BrowsePage() {
           </div>
         </div>
 
-        <Tabs value={itemType} onValueChange={(v) => setItemType(v as 'all' | ItemType)}>
+        <Tabs
+          value={itemType}
+          onValueChange={(v) => setItemType(v as "all" | ItemType)}
+        >
           <TabsList className="grid w-full max-w-md grid-cols-3">
             <TabsTrigger value="all">All Items</TabsTrigger>
             <TabsTrigger value={ItemType.lost}>Lost</TabsTrigger>

@@ -2,10 +2,30 @@
     <head>
         <meta charset='UTF-8' />
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-        <title>Lost &amp; Found MVP: Post items with photos, search, claim, and asynchronous messaging</title>
+        <meta name='theme-color' content='#1fa89d' />
+        <meta name='description' content='Lost It Find It - Community-powered lost and found platform. Report lost items, find what you lost, and help reunite people with their belongings.' />
+        <link rel='manifest' href='/manifest.webmanifest' />
+        <link rel='icon' type='image/png' sizes='192x192' href='/assets/generated/lostitfindit-pwa-icon.dim_192x192.png' />
+        <link rel='icon' type='image/png' sizes='512x512' href='/assets/generated/lostitfindit-pwa-icon.dim_512x512.png' />
+        <link rel='apple-touch-icon' href='/assets/generated/lostitfindit-pwa-icon.dim_512x512.png' />
+        <title>Lost It Find It - Community Lost &amp; Found</title>
     </head>
     <body>
         <div id='root'></div>
         <script type='module' src='/src/main.tsx'></script>
+        <script type='module'>
+            // Register service worker for PWA functionality
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(registration => {
+                            console.log('Service Worker registered successfully:', registration.scope);
+                        })
+                        .catch(error => {
+                            console.log('Service Worker registration failed:', error);
+                        });
+                });
+            }
+        </script>
     </body>
 </html>

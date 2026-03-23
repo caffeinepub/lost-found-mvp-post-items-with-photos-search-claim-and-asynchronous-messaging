@@ -1,16 +1,34 @@
-import { createRouter, createRoute, createRootRoute, RouterProvider, Outlet, useNavigate } from '@tanstack/react-router';
-import { useInternetIdentity } from './hooks/useInternetIdentity';
-import { ItemType } from './backend';
-import LandingPage from './pages/LandingPage';
-import BrowsePage from './pages/BrowsePage';
-import ReportItemPage from './pages/ReportItemPage';
-import ItemDetailPage from './pages/ItemDetailPage';
-import InboxPage from './pages/InboxPage';
-import ConversationPage from './pages/ConversationPage';
-import FeedbackPage from './pages/FeedbackPage';
-import AppLayout from './components/layout/AppLayout';
-import ProfileSetupDialog from './components/auth/ProfileSetupDialog';
-import { Toaster } from '@/components/ui/sonner';
+import { Toaster } from "@/components/ui/sonner";
+import {
+  Outlet,
+  RouterProvider,
+  createRootRoute,
+  createRoute,
+  createRouter,
+  useNavigate,
+} from "@tanstack/react-router";
+import { ItemType } from "./backend";
+import ProfileSetupDialog from "./components/auth/ProfileSetupDialog";
+import AppLayout from "./components/layout/AppLayout";
+import InstallPrompt from "./components/pwa/InstallPrompt";
+import { useInternetIdentity } from "./hooks/useInternetIdentity";
+import AdminFeedbackPage from "./pages/AdminFeedbackPage";
+import BrowsePage from "./pages/BrowsePage";
+import ConversationPage from "./pages/ConversationPage";
+import FeedbackPage from "./pages/FeedbackPage";
+import InboxPage from "./pages/InboxPage";
+import ItemDetailPage from "./pages/ItemDetailPage";
+import LandingPage from "./pages/LandingPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import ReportItemPage from "./pages/ReportItemPage";
+
+// PWA icon paths — referenced here to prevent build pruning
+const PWA_ICONS = [
+  "/assets/generated/lostitfindit-pwa-icon.dim_192x192.png",
+  "/assets/generated/lostitfindit-pwa-icon.dim_512x512.png",
+  "/assets/generated/lostitfindit-pwa-icon-maskable.dim_192x192.png",
+  "/assets/generated/lostitfindit-pwa-icon-maskable.dim_512x512.png",
+];
 
 // Root component with layout for authenticated users
 function RootComponent() {
@@ -18,7 +36,7 @@ function RootComponent() {
   const isAuthenticated = !!identity;
 
   if (!isAuthenticated) {
-    return <LandingPage />;
+    return <Outlet />;
   }
 
   return (
@@ -26,6 +44,13 @@ function RootComponent() {
       <ProfileSetupDialog />
       <Outlet />
       <Toaster />
+      <InstallPrompt />
+      {/* Hidden PWA icon references to prevent build pruning */}
+      <div style={{ display: "none" }} aria-hidden="true">
+        {PWA_ICONS.map((src) => (
+          <img key={src} src={src} alt="" />
+        ))}
+      </div>
     </AppLayout>
   );
 }
@@ -34,13 +59,13 @@ function RootComponent() {
 function IndexComponent() {
   const navigate = useNavigate();
   const { identity } = useInternetIdentity();
-  
+
   // Redirect authenticated users to browse page
   if (identity) {
-    navigate({ to: '/browse' });
+    navigate({ to: "/browse" });
     return null;
   }
-  
+
   return <LandingPage />;
 }
 
@@ -52,50 +77,62 @@ const rootRoute = createRootRoute({
 // Define routes
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/',
+  path: "/",
   component: IndexComponent,
 });
 
 const browseRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/browse',
+  path: "/browse",
   component: BrowsePage,
 });
 
 const reportLostRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/report/lost',
+  path: "/report/lost",
   component: () => <ReportItemPage itemType={ItemType.lost} />,
 });
 
 const reportFoundRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/report/found',
+  path: "/report/found",
   component: () => <ReportItemPage itemType={ItemType.found} />,
 });
 
 const itemDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/item/$itemId',
+  path: "/item/$itemId",
   component: ItemDetailPage,
 });
 
 const inboxRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/inbox',
+  path: "/inbox",
   component: InboxPage,
 });
 
 const conversationRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/conversation/$conversationId',
+  path: "/conversation/$conversationId",
   component: ConversationPage,
 });
 
 const feedbackRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/feedback',
+  path: "/feedback",
   component: FeedbackPage,
+});
+
+const adminFeedbackRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/admin/feedback",
+  component: AdminFeedbackPage,
+});
+
+const privacyRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/privacy",
+  component: PrivacyPolicyPage,
 });
 
 // Create router
@@ -108,11 +145,13 @@ const routeTree = rootRoute.addChildren([
   inboxRoute,
   conversationRoute,
   feedbackRoute,
+  adminFeedbackRoute,
+  privacyRoute,
 ]);
 
 const router = createRouter({ routeTree });
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
   }

@@ -1,0 +1,37 @@
+{
+  "packageId": "app.lostitfindit.twa",
+  "host": "YOUR_PRODUCTION_URL_HERE",
+  "name": "Lost It Find It",
+  "launcherName": "LostItFindIt",
+  "display": "standalone",
+  "themeColor": "#1fa89d",
+  "backgroundColor": "#ffffff",
+  "startUrl": "/",
+  "iconUrl": "https://YOUR_PRODUCTION_URL_HERE/assets/generated/lostitfindit-pwa-icon.dim_512x512.png",
+  "maskableIconUrl": "https://YOUR_PRODUCTION_URL_HERE/assets/generated/lostitfindit-pwa-icon-maskable.dim_512x512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "REPLACE_WITH_KEYSTORE_PATH",
+    "alias": "REPLACE_WITH_KEY_ALIAS"
+  },
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://YOUR_PRODUCTION_URL_HERE/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "enableNotifications": false,
+  "features": {
+    "locationDelegation": {
+      "enabled": false
+    },
+    "playBilling": {
+      "enabled": false
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "minSdkVersion": 21,
+  "targetSdkVersion": 33
+}

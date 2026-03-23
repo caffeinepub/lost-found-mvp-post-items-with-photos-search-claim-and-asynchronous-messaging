@@ -1,18 +1,18 @@
-import { useState } from 'react';
-import { useUpdateItemStatus } from '../../hooks/useQueries';
-import { Status } from '../../backend';
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
-import { getUserFriendlyError } from '../../utils/errors';
-import { toast } from 'sonner';
+} from "@/components/ui/select";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import type { Status } from "../../backend";
+import { useUpdateItemStatus } from "../../hooks/useQueries";
+import { getUserFriendlyError } from "../../utils/errors";
 
 interface StatusUpdateControlProps {
   itemId: string;
@@ -29,9 +29,9 @@ export default function StatusUpdateControl({
   const updateMutation = useUpdateItemStatus();
 
   const statusOptions = [
-    { value: 'missing' as Status, label: 'Still Missing' },
-    { value: 'claimed' as Status, label: 'Claimed' },
-    { value: 'returned' as Status, label: 'Returned' },
+    { value: "missing" as Status, label: "Still Missing" },
+    { value: "claimed" as Status, label: "Claimed" },
+    { value: "returned" as Status, label: "Returned" },
   ];
 
   const handleUpdate = async () => {
@@ -39,7 +39,7 @@ export default function StatusUpdateControl({
 
     try {
       await updateMutation.mutateAsync({ itemId, newStatus: selectedStatus });
-      toast.success('Item status updated successfully');
+      toast.success("Item status updated successfully");
     } catch (error) {
       const errorMessage = getUserFriendlyError(error);
       toast.error(errorMessage);
@@ -83,7 +83,7 @@ export default function StatusUpdateControl({
               Updating...
             </>
           ) : (
-            'Update'
+            "Update"
           )}
         </Button>
       </div>

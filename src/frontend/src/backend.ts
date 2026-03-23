@@ -89,13 +89,34 @@ export class ExternalBlob {
         return this;
     }
 }
-export interface Conversation {
-    id: string;
-    itemId: string;
-    participants: Array<Principal>;
-    messages: Array<Message>;
-}
 export type Time = bigint;
+export interface PushSubscription {
+    endpoint: string;
+    auth: string;
+    p256dh: string;
+}
+export interface _CaffeineStorageRefillInformation {
+    proposed_top_up_amount?: bigint;
+}
+export interface FeedbackEntryWithReadStatus {
+    id: bigint;
+    createdAt: Time;
+    user: Principal;
+    isRead: boolean;
+    message: string;
+    rating: bigint;
+}
+export interface _CaffeineStorageCreateCertificateResult {
+    method: string;
+    blob_hash: string;
+}
+export interface FeedbackEntry {
+    id: bigint;
+    createdAt: Time;
+    user: Principal;
+    message: string;
+    rating: bigint;
+}
 export interface Item {
     id: string;
     status: Status;
@@ -109,24 +130,17 @@ export interface Item {
     dateTime: string;
     location: string;
 }
-export interface _CaffeineStorageRefillInformation {
-    proposed_top_up_amount?: bigint;
-}
 export interface Message {
     id: string;
     content: string;
     sender: Principal;
     timestamp: Time;
 }
-export interface _CaffeineStorageCreateCertificateResult {
-    method: string;
-    blob_hash: string;
-}
-export interface FeedbackEntry {
-    id: bigint;
-    createdAt: Time;
-    user: Principal;
-    message: string;
+export interface Conversation {
+    id: string;
+    itemId: string;
+    participants: Array<Principal>;
+    messages: Array<Message>;
 }
 export interface UserProfile {
     name: string;
@@ -160,19 +174,26 @@ export interface backendInterface {
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     createConversation(itemId: string): Promise<string>;
     createItem(itemType: ItemType, title: string, description: string, category: string, location: string, dateTime: string, photo: ExternalBlob | null): Promise<string>;
-    getAllFeedback(): Promise<Array<FeedbackEntry>>;
+    getAllFeedback(): Promise<Array<FeedbackEntryWithReadStatus>>;
     getCallerFeedback(): Promise<Array<FeedbackEntry>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getConversation(conversationId: string): Promise<Conversation | null>;
     getItem(itemId: string): Promise<Item | null>;
+    getRecipientPushSubscriptions(recipient: Principal): Promise<Array<PushSubscription>>;
+    getRegisteredUsersCount(): Promise<bigint>;
+    getUnreadFeedbackCount(): Promise<bigint>;
     getUserConversations(user: Principal): Promise<Array<Conversation>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
+    markAllFeedbackAsRead(): Promise<void>;
+    markFeedbackAsRead(id: bigint): Promise<void>;
+    registerPushSubscription(endpoint: string, p256dh: string, auth: string): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     searchItems(keyword: string, category: string | null, itemType: ItemType | null): Promise<Array<Item>>;
     sendMessage(conversationId: string, message: string): Promise<void>;
-    submitFeedback(message: string): Promise<void>;
+    submitFeedback(message: string, rating: bigint): Promise<void>;
+    unregisterPushSubscription(endpoint: string): Promise<void>;
     updateItemStatus(itemId: string, newStatus: Status): Promise<void>;
 }
 import type { Conversation as _Conversation, ExternalBlob as _ExternalBlob, Item as _Item, ItemType as _ItemType, Status as _Status, Time as _Time, UserProfile as _UserProfile, UserRole as _UserRole, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
@@ -318,7 +339,7 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async getAllFeedback(): Promise<Array<FeedbackEntry>> {
+    async getAllFeedback(): Promise<Array<FeedbackEntryWithReadStatus>> {
         if (this.processError) {
             try {
                 const result = await this.actor.getAllFeedback();
@@ -402,6 +423,48 @@ export class Backend implements backendInterface {
             return from_candid_opt_n18(this._uploadFile, this._downloadFile, result);
         }
     }
+    async getRecipientPushSubscriptions(arg0: Principal): Promise<Array<PushSubscription>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getRecipientPushSubscriptions(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getRecipientPushSubscriptions(arg0);
+            return result;
+        }
+    }
+    async getRegisteredUsersCount(): Promise<bigint> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getRegisteredUsersCount();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getRegisteredUsersCount();
+            return result;
+        }
+    }
+    async getUnreadFeedbackCount(): Promise<bigint> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getUnreadFeedbackCount();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getUnreadFeedbackCount();
+            return result;
+        }
+    }
     async getUserConversations(arg0: Principal): Promise<Array<Conversation>> {
         if (this.processError) {
             try {
@@ -441,6 +504,48 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.isCallerAdmin();
+            return result;
+        }
+    }
+    async markAllFeedbackAsRead(): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.markAllFeedbackAsRead();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.markAllFeedbackAsRead();
+            return result;
+        }
+    }
+    async markFeedbackAsRead(arg0: bigint): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.markFeedbackAsRead(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.markFeedbackAsRead(arg0);
+            return result;
+        }
+    }
+    async registerPushSubscription(arg0: string, arg1: string, arg2: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.registerPushSubscription(arg0, arg1, arg2);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.registerPushSubscription(arg0, arg1, arg2);
             return result;
         }
     }
@@ -486,17 +591,31 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async submitFeedback(arg0: string): Promise<void> {
+    async submitFeedback(arg0: string, arg1: bigint): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.submitFeedback(arg0);
+                const result = await this.actor.submitFeedback(arg0, arg1);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.submitFeedback(arg0);
+            const result = await this.actor.submitFeedback(arg0, arg1);
+            return result;
+        }
+    }
+    async unregisterPushSubscription(arg0: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.unregisterPushSubscription(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.unregisterPushSubscription(arg0);
             return result;
         }
     }

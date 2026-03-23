@@ -1,16 +1,19 @@
-import { useNavigate } from '@tanstack/react-router';
-import { useCreateConversation } from '../../hooks/useQueries';
-import { Button } from '@/components/ui/button';
-import { MessageCircle, Loader2 } from 'lucide-react';
-import { getUserFriendlyError } from '../../utils/errors';
-import { toast } from 'sonner';
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "@tanstack/react-router";
+import { Loader2, MessageCircle } from "lucide-react";
+import { toast } from "sonner";
+import { useCreateConversation } from "../../hooks/useQueries";
+import { getUserFriendlyError } from "../../utils/errors";
 
 interface StartConversationCTAProps {
   itemId: string;
   isOwnItem: boolean;
 }
 
-export default function StartConversationCTA({ itemId, isOwnItem }: StartConversationCTAProps) {
+export default function StartConversationCTA({
+  itemId,
+  isOwnItem,
+}: StartConversationCTAProps) {
   const navigate = useNavigate();
   const createMutation = useCreateConversation();
 
@@ -21,7 +24,10 @@ export default function StartConversationCTA({ itemId, isOwnItem }: StartConvers
   const handleStartConversation = async () => {
     try {
       const conversationId = await createMutation.mutateAsync(itemId);
-      navigate({ to: '/conversation/$conversationId', params: { conversationId } });
+      navigate({
+        to: "/conversation/$conversationId",
+        params: { conversationId },
+      });
     } catch (error) {
       const errorMessage = getUserFriendlyError(error);
       toast.error(errorMessage);

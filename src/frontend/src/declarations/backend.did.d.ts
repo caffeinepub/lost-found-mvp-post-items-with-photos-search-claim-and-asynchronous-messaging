@@ -22,6 +22,15 @@ export interface FeedbackEntry {
   'createdAt' : Time,
   'user' : Principal,
   'message' : string,
+  'rating' : bigint,
+}
+export interface FeedbackEntryWithReadStatus {
+  'id' : bigint,
+  'createdAt' : Time,
+  'user' : Principal,
+  'isRead' : boolean,
+  'message' : string,
+  'rating' : bigint,
 }
 export interface Item {
   'id' : string,
@@ -43,6 +52,11 @@ export interface Message {
   'content' : string,
   'sender' : Principal,
   'timestamp' : Time,
+}
+export interface PushSubscription {
+  'endpoint' : string,
+  'auth' : string,
+  'p256dh' : string,
 }
 export type Status = { 'missing' : null } |
   { 'claimed' : null } |
@@ -86,22 +100,32 @@ export interface _SERVICE {
     [ItemType, string, string, string, string, string, [] | [ExternalBlob]],
     string
   >,
-  'getAllFeedback' : ActorMethod<[], Array<FeedbackEntry>>,
+  'getAllFeedback' : ActorMethod<[], Array<FeedbackEntryWithReadStatus>>,
   'getCallerFeedback' : ActorMethod<[], Array<FeedbackEntry>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getConversation' : ActorMethod<[string], [] | [Conversation]>,
   'getItem' : ActorMethod<[string], [] | [Item]>,
+  'getRecipientPushSubscriptions' : ActorMethod<
+    [Principal],
+    Array<PushSubscription>
+  >,
+  'getRegisteredUsersCount' : ActorMethod<[], bigint>,
+  'getUnreadFeedbackCount' : ActorMethod<[], bigint>,
   'getUserConversations' : ActorMethod<[Principal], Array<Conversation>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
+  'markAllFeedbackAsRead' : ActorMethod<[], undefined>,
+  'markFeedbackAsRead' : ActorMethod<[bigint], undefined>,
+  'registerPushSubscription' : ActorMethod<[string, string, string], undefined>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'searchItems' : ActorMethod<
     [string, [] | [string], [] | [ItemType]],
     Array<Item>
   >,
   'sendMessage' : ActorMethod<[string, string], undefined>,
-  'submitFeedback' : ActorMethod<[string], undefined>,
+  'submitFeedback' : ActorMethod<[string, bigint], undefined>,
+  'unregisterPushSubscription' : ActorMethod<[string], undefined>,
   'updateItemStatus' : ActorMethod<[string, Status], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;

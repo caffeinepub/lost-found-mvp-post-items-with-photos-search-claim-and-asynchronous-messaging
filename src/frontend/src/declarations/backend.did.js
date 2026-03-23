@@ -27,11 +27,20 @@ export const UserRole = IDL.Variant({
 export const ItemType = IDL.Variant({ 'found' : IDL.Null, 'lost' : IDL.Null });
 export const ExternalBlob = IDL.Vec(IDL.Nat8);
 export const Time = IDL.Int;
+export const FeedbackEntryWithReadStatus = IDL.Record({
+  'id' : IDL.Nat,
+  'createdAt' : Time,
+  'user' : IDL.Principal,
+  'isRead' : IDL.Bool,
+  'message' : IDL.Text,
+  'rating' : IDL.Nat,
+});
 export const FeedbackEntry = IDL.Record({
   'id' : IDL.Nat,
   'createdAt' : Time,
   'user' : IDL.Principal,
   'message' : IDL.Text,
+  'rating' : IDL.Nat,
 });
 export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 export const Message = IDL.Record({
@@ -63,6 +72,11 @@ export const Item = IDL.Record({
   'photo' : IDL.Opt(ExternalBlob),
   'dateTime' : IDL.Text,
   'location' : IDL.Text,
+});
+export const PushSubscription = IDL.Record({
+  'endpoint' : IDL.Text,
+  'auth' : IDL.Text,
+  'p256dh' : IDL.Text,
 });
 
 export const idlService = IDL.Service({
@@ -108,12 +122,23 @@ export const idlService = IDL.Service({
       [IDL.Text],
       [],
     ),
-  'getAllFeedback' : IDL.Func([], [IDL.Vec(FeedbackEntry)], ['query']),
+  'getAllFeedback' : IDL.Func(
+      [],
+      [IDL.Vec(FeedbackEntryWithReadStatus)],
+      ['query'],
+    ),
   'getCallerFeedback' : IDL.Func([], [IDL.Vec(FeedbackEntry)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getConversation' : IDL.Func([IDL.Text], [IDL.Opt(Conversation)], ['query']),
   'getItem' : IDL.Func([IDL.Text], [IDL.Opt(Item)], ['query']),
+  'getRecipientPushSubscriptions' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Vec(PushSubscription)],
+      ['query'],
+    ),
+  'getRegisteredUsersCount' : IDL.Func([], [IDL.Nat], ['query']),
+  'getUnreadFeedbackCount' : IDL.Func([], [IDL.Nat], ['query']),
   'getUserConversations' : IDL.Func(
       [IDL.Principal],
       [IDL.Vec(Conversation)],
@@ -125,6 +150,9 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'markAllFeedbackAsRead' : IDL.Func([], [], []),
+  'markFeedbackAsRead' : IDL.Func([IDL.Nat], [], []),
+  'registerPushSubscription' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'searchItems' : IDL.Func(
       [IDL.Text, IDL.Opt(IDL.Text), IDL.Opt(ItemType)],
@@ -132,7 +160,8 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'sendMessage' : IDL.Func([IDL.Text, IDL.Text], [], []),
-  'submitFeedback' : IDL.Func([IDL.Text], [], []),
+  'submitFeedback' : IDL.Func([IDL.Text, IDL.Nat], [], []),
+  'unregisterPushSubscription' : IDL.Func([IDL.Text], [], []),
   'updateItemStatus' : IDL.Func([IDL.Text, Status], [], []),
 });
 
@@ -158,11 +187,20 @@ export const idlFactory = ({ IDL }) => {
   const ItemType = IDL.Variant({ 'found' : IDL.Null, 'lost' : IDL.Null });
   const ExternalBlob = IDL.Vec(IDL.Nat8);
   const Time = IDL.Int;
+  const FeedbackEntryWithReadStatus = IDL.Record({
+    'id' : IDL.Nat,
+    'createdAt' : Time,
+    'user' : IDL.Principal,
+    'isRead' : IDL.Bool,
+    'message' : IDL.Text,
+    'rating' : IDL.Nat,
+  });
   const FeedbackEntry = IDL.Record({
     'id' : IDL.Nat,
     'createdAt' : Time,
     'user' : IDL.Principal,
     'message' : IDL.Text,
+    'rating' : IDL.Nat,
   });
   const UserProfile = IDL.Record({ 'name' : IDL.Text });
   const Message = IDL.Record({
@@ -194,6 +232,11 @@ export const idlFactory = ({ IDL }) => {
     'photo' : IDL.Opt(ExternalBlob),
     'dateTime' : IDL.Text,
     'location' : IDL.Text,
+  });
+  const PushSubscription = IDL.Record({
+    'endpoint' : IDL.Text,
+    'auth' : IDL.Text,
+    'p256dh' : IDL.Text,
   });
   
   return IDL.Service({
@@ -239,7 +282,11 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Text],
         [],
       ),
-    'getAllFeedback' : IDL.Func([], [IDL.Vec(FeedbackEntry)], ['query']),
+    'getAllFeedback' : IDL.Func(
+        [],
+        [IDL.Vec(FeedbackEntryWithReadStatus)],
+        ['query'],
+      ),
     'getCallerFeedback' : IDL.Func([], [IDL.Vec(FeedbackEntry)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
@@ -249,6 +296,13 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'getItem' : IDL.Func([IDL.Text], [IDL.Opt(Item)], ['query']),
+    'getRecipientPushSubscriptions' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Vec(PushSubscription)],
+        ['query'],
+      ),
+    'getRegisteredUsersCount' : IDL.Func([], [IDL.Nat], ['query']),
+    'getUnreadFeedbackCount' : IDL.Func([], [IDL.Nat], ['query']),
     'getUserConversations' : IDL.Func(
         [IDL.Principal],
         [IDL.Vec(Conversation)],
@@ -260,6 +314,13 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'markAllFeedbackAsRead' : IDL.Func([], [], []),
+    'markFeedbackAsRead' : IDL.Func([IDL.Nat], [], []),
+    'registerPushSubscription' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text],
+        [],
+        [],
+      ),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'searchItems' : IDL.Func(
         [IDL.Text, IDL.Opt(IDL.Text), IDL.Opt(ItemType)],
@@ -267,7 +328,8 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'sendMessage' : IDL.Func([IDL.Text, IDL.Text], [], []),
-    'submitFeedback' : IDL.Func([IDL.Text], [], []),
+    'submitFeedback' : IDL.Func([IDL.Text, IDL.Nat], [], []),
+    'unregisterPushSubscription' : IDL.Func([IDL.Text], [], []),
     'updateItemStatus' : IDL.Func([IDL.Text, Status], [], []),
   });
 };

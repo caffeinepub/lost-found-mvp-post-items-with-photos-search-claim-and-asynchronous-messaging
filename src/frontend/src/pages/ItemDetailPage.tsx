@@ -1,31 +1,45 @@
-import { useParams, useNavigate } from '@tanstack/react-router';
-import { useGetItem, useSearchItems } from '../hooks/useQueries';
-import { useInternetIdentity } from '../hooks/useInternetIdentity';
-import { ItemType } from '../backend';
-import StatusUpdateControl from '../components/items/StatusUpdateControl';
-import StartConversationCTA from '../components/conversations/StartConversationCTA';
-import ItemCard from '../components/items/ItemCard';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
-import { MapPin, Calendar, Package, User, Loader2, ArrowLeft } from 'lucide-react';
-import { principalsEqual } from '../utils/identity';
-import { calculateSimilarity, getKeywords } from '../utils/textSimilarity';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { useNavigate, useParams } from "@tanstack/react-router";
+import {
+  ArrowLeft,
+  Calendar,
+  Loader2,
+  MapPin,
+  Package,
+  User,
+} from "lucide-react";
+import { ItemType } from "../backend";
+import StartConversationCTA from "../components/conversations/StartConversationCTA";
+import ItemCard from "../components/items/ItemCard";
+import StatusUpdateControl from "../components/items/StatusUpdateControl";
+import { useInternetIdentity } from "../hooks/useInternetIdentity";
+import { useGetItem, useSearchItems } from "../hooks/useQueries";
+import { principalsEqual } from "../utils/identity";
+import { calculateSimilarity, getKeywords } from "../utils/textSimilarity";
 
 export default function ItemDetailPage() {
-  const { itemId } = useParams({ from: '/item/$itemId' });
+  const { itemId } = useParams({ from: "/item/$itemId" });
   const navigate = useNavigate();
   const { identity } = useInternetIdentity();
   const { data: item, isLoading } = useGetItem(itemId);
 
   // Get possible matches
-  const oppositeType: ItemType | null = item?.itemType === ItemType.lost ? ItemType.found : item?.itemType === ItemType.found ? ItemType.lost : null;
-  const keywords = item ? getKeywords(`${item.title} ${item.description}`, 3).join(' ') : '';
+  const oppositeType: ItemType | null =
+    item?.itemType === ItemType.lost
+      ? ItemType.found
+      : item?.itemType === ItemType.found
+        ? ItemType.lost
+        : null;
+  const keywords = item
+    ? getKeywords(`${item.title} ${item.description}`, 3).join(" ")
+    : "";
   const { data: candidateMatches = [] } = useSearchItems(
     keywords,
     item?.category || null,
-    oppositeType
+    oppositeType,
   );
 
   // Calculate similarity and filter matches
@@ -36,7 +50,7 @@ export default function ItemDetailPage() {
           item: candidate,
           score: calculateSimilarity(
             `${item.title} ${item.description}`,
-            `${candidate.title} ${candidate.description}`
+            `${candidate.title} ${candidate.description}`,
           ),
         }))
         .filter((match) => match.score > 0.1)
@@ -56,43 +70,50 @@ export default function ItemDetailPage() {
     return (
       <div className="container py-12 text-center">
         <h2 className="text-2xl font-bold">Item not found</h2>
-        <p className="text-muted-foreground mt-2">The item you're looking for doesn't exist.</p>
-        <Button onClick={() => navigate({ to: '/browse' })} className="mt-4">
+        <p className="text-muted-foreground mt-2">
+          The item you're looking for doesn't exist.
+        </p>
+        <Button onClick={() => navigate({ to: "/browse" })} className="mt-4">
           Back to Browse
         </Button>
       </div>
     );
   }
 
-  const isOwnItem = identity && principalsEqual(identity.getPrincipal(), item.createdBy);
+  const isOwnItem =
+    identity && principalsEqual(identity.getPrincipal(), item.createdBy);
 
   const statusColors = {
-    missing: 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20',
-    claimed: 'bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20',
-    returned: 'bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20',
+    missing:
+      "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20",
+    claimed:
+      "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20",
+    returned:
+      "bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20",
   };
 
   const typeColors = {
-    lost: 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20',
-    found: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20',
+    lost: "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20",
+    found:
+      "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20",
   };
 
   const statusLabels = {
-    missing: 'Still Missing',
-    claimed: 'Claimed',
-    returned: 'Returned',
+    missing: "Still Missing",
+    claimed: "Claimed",
+    returned: "Returned",
   };
 
   const typeLabels = {
-    lost: 'Lost Item',
-    found: 'Found Item',
+    lost: "Lost Item",
+    found: "Found Item",
   };
 
   return (
     <div className="container max-w-5xl py-8 space-y-6">
       <Button
         variant="ghost"
-        onClick={() => navigate({ to: '/browse' })}
+        onClick={() => navigate({ to: "/browse" })}
         className="gap-2"
       >
         <ArrowLeft className="h-4 w-4" />
@@ -115,10 +136,16 @@ export default function ItemDetailPage() {
               <div className="flex items-start justify-between gap-4">
                 <CardTitle className="text-2xl">{item.title}</CardTitle>
                 <div className="flex gap-2">
-                  <Badge variant="outline" className={typeColors[item.itemType]}>
+                  <Badge
+                    variant="outline"
+                    className={typeColors[item.itemType]}
+                  >
                     {typeLabels[item.itemType]}
                   </Badge>
-                  <Badge variant="outline" className={statusColors[item.status]}>
+                  <Badge
+                    variant="outline"
+                    className={statusColors[item.status]}
+                  >
                     {statusLabels[item.status]}
                   </Badge>
                 </div>
@@ -127,7 +154,9 @@ export default function ItemDetailPage() {
             <CardContent className="space-y-4">
               <div>
                 <h3 className="font-semibold mb-2">Description</h3>
-                <p className="text-muted-foreground whitespace-pre-wrap">{item.description}</p>
+                <p className="text-muted-foreground whitespace-pre-wrap">
+                  {item.description}
+                </p>
               </div>
 
               <Separator />
@@ -154,7 +183,9 @@ export default function ItemDetailPage() {
                 <div className="flex items-center gap-2 text-sm">
                   <User className="h-4 w-4 text-muted-foreground" />
                   <span className="font-medium">Posted by:</span>
-                  <span className="text-muted-foreground">{isOwnItem ? 'You' : 'Another user'}</span>
+                  <span className="text-muted-foreground">
+                    {isOwnItem ? "You" : "Another user"}
+                  </span>
                 </div>
               </div>
             </CardContent>

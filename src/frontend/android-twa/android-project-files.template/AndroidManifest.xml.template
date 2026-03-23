@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Android Manifest Template for Lost It Find It TWA
+  
+  REQUIRED PLACEHOLDER REPLACEMENTS:
+  1. package="app.lostitfindit.twa" → Replace with your unique package name
+     - Must match frontend/public/.well-known/assetlinks.json package_name field
+     - Format: reverse domain notation (e.g., com.yourcompany.lostitfindit)
+     - Cannot be changed after first Play Store upload
+  
+  This template should be copied to: /bubblewrap/app/src/main/AndroidManifest.xml
+  
+  For complete setup instructions, see:
+  - /bubblewrap/README.md
+  - frontend/android-twa/android-project-files.template/PLACEHOLDERS.md
+  - frontend/docs/android-twa-bubblewrap-guide.md
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="app.lostitfindit.twa">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.LauncherActivity">
+
+        <activity
+            android:name="com.google.androidbrowserhelper.trusted.LauncherActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LauncherActivity">
+
+            <!-- Main launcher intent -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- Deep linking intent filter -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="https"
+                    android:host="@string/host" />
+            </intent-filter>
+
+            <!-- Digital Asset Links metadata -->
+            <meta-data
+                android:name="android.support.customtabs.trusted.DEFAULT_URL"
+                android:value="@string/launchUrl" />
+
+            <meta-data
+                android:name="asset_statements"
+                android:value="@string/assetStatements" />
+        </activity>
+
+    </application>
+
+</manifest>

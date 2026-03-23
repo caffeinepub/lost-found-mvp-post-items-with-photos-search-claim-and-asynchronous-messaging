@@ -1,16 +1,19 @@
-import { useState, useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Upload, X, Loader2 } from 'lucide-react';
-import { validatePhoto } from '../../utils/validation';
-import { ExternalBlob } from '../../backend';
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Loader2, Upload, X } from "lucide-react";
+import { useRef, useState } from "react";
+import { ExternalBlob } from "../../backend";
+import { validatePhoto } from "../../utils/validation";
 
 interface PhotoPickerProps {
   onPhotoChange: (blob: ExternalBlob | null) => void;
   disabled?: boolean;
 }
 
-export default function PhotoPicker({ onPhotoChange, disabled }: PhotoPickerProps) {
+export default function PhotoPicker({
+  onPhotoChange,
+  disabled,
+}: PhotoPickerProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
@@ -30,7 +33,7 @@ export default function PhotoPicker({ onPhotoChange, disabled }: PhotoPickerProp
     if (validationError) {
       setError(validationError);
       if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+        fileInputRef.current.value = "";
       }
       return;
     }
@@ -49,17 +52,19 @@ export default function PhotoPicker({ onPhotoChange, disabled }: PhotoPickerProp
       // Convert to bytes for ExternalBlob
       const arrayBuffer = await file.arrayBuffer();
       const bytes = new Uint8Array(arrayBuffer);
-      
-      const blob = ExternalBlob.fromBytes(bytes).withUploadProgress((percentage) => {
-        setUploadProgress(percentage);
-      });
+
+      const blob = ExternalBlob.fromBytes(bytes).withUploadProgress(
+        (percentage) => {
+          setUploadProgress(percentage);
+        },
+      );
 
       onPhotoChange(blob);
       setIsUploading(false);
     } catch (err) {
-      setError('Failed to process image. Please try again.');
+      setError("Failed to process image. Please try again.");
       setIsUploading(false);
-      console.error('Photo processing error:', err);
+      console.error("Photo processing error:", err);
     }
   };
 
@@ -69,14 +74,14 @@ export default function PhotoPicker({ onPhotoChange, disabled }: PhotoPickerProp
     setUploadProgress(0);
     onPhotoChange(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
   return (
     <div className="space-y-2">
       <Label>Photo (Optional)</Label>
-      
+
       {!preview ? (
         <div className="flex flex-col gap-2">
           <Button
