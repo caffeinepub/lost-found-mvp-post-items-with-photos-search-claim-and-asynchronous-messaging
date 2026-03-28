@@ -22,36 +22,37 @@ import LandingPage from "./pages/LandingPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import ReportItemPage from "./pages/ReportItemPage";
 
-// PWA icon paths — referenced here to prevent build pruning
-const PWA_ICONS = [
-  "/assets/generated/lostitfindit-pwa-icon.dim_192x192.png",
-  "/assets/generated/lostitfindit-pwa-icon.dim_512x512.png",
-  "/assets/generated/lostitfindit-pwa-icon-maskable.dim_192x192.png",
-  "/assets/generated/lostitfindit-pwa-icon-maskable.dim_512x512.png",
-];
+import pwaIconMaskable192 from "/assets/generated/lostitfindit-pwa-icon-maskable.dim_192x192.png";
+import pwaIconMaskable512 from "/assets/generated/lostitfindit-pwa-icon-maskable.dim_512x512.png";
+// PWA icon imports — imported as modules so the build pipeline always includes them
+import pwaIcon192 from "/assets/generated/lostitfindit-pwa-icon.dim_192x192.png";
+import pwaIcon512 from "/assets/generated/lostitfindit-pwa-icon.dim_512x512.png";
 
 // Root component with layout for authenticated users
 function RootComponent() {
   const { identity } = useInternetIdentity();
   const isAuthenticated = !!identity;
 
-  if (!isAuthenticated) {
-    return <Outlet />;
-  }
-
   return (
-    <AppLayout>
-      <ProfileSetupDialog />
-      <Outlet />
-      <Toaster />
-      <InstallPrompt />
-      {/* Hidden PWA icon references to prevent build pruning */}
+    <>
+      {/* Hidden PWA icon references — always rendered to prevent build pruning */}
       <div style={{ display: "none" }} aria-hidden="true">
-        {PWA_ICONS.map((src) => (
-          <img key={src} src={src} alt="" />
-        ))}
+        <img src={pwaIcon192} alt="" />
+        <img src={pwaIcon512} alt="" />
+        <img src={pwaIconMaskable192} alt="" />
+        <img src={pwaIconMaskable512} alt="" />
       </div>
-    </AppLayout>
+      {isAuthenticated ? (
+        <AppLayout>
+          <ProfileSetupDialog />
+          <Outlet />
+          <Toaster />
+          <InstallPrompt />
+        </AppLayout>
+      ) : (
+        <Outlet />
+      )}
+    </>
   );
 }
 
