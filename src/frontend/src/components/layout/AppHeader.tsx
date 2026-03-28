@@ -86,7 +86,7 @@ export default function AppHeader() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm" className="gap-2">
-                      <PlusCircle className="h-4 w-4 text-green-500" />
+                      <PlusCircle className="h-4 w-4 text-orange-500" />
                       Report Item
                     </Button>
                   </DropdownMenuTrigger>
@@ -243,8 +243,8 @@ export default function AppHeader() {
             data-ocid="nav.report_found.button"
             className={`flex flex-1 flex-col items-center justify-center gap-1 py-3 transition-colors min-h-[60px] ${
               isActive("/report/found")
-                ? "text-green-600"
-                : "text-muted-foreground hover:text-green-500"
+                ? "text-orange-500"
+                : "text-muted-foreground hover:text-orange-500"
             }`}
             aria-label="Report found item"
           >

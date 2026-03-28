@@ -48,7 +48,7 @@ export default function LandingPage() {
                   <span
                     style={{
                       background:
-                        "linear-gradient(90deg, oklch(0.90 0.22 145), oklch(0.85 0.20 195))",
+                        "linear-gradient(90deg, oklch(0.90 0.24 40), oklch(0.85 0.22 55))",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
                       backgroundClip: "text",
@@ -72,7 +72,7 @@ export default function LandingPage() {
                 <div className="relative">
                   <div
                     className="absolute -inset-3 rounded-3xl blur-xl opacity-60"
-                    style={{ background: "oklch(0.72 0.22 145 / 0.5)" }}
+                    style={{ background: "oklch(0.65 0.22 40 / 0.5)" }}
                   />
                   <img
                     src="/assets/generated/lostfound-hero.dim_1600x900.png"
@@ -93,7 +93,7 @@ export default function LandingPage() {
               className="group relative flex flex-col items-center gap-3 rounded-2xl px-10 py-8 shadow-lg ring-1 ring-primary/20 transition-shadow hover:shadow-xl"
               style={{
                 background:
-                  "linear-gradient(135deg, oklch(0.18 0.04 145 / 0.90), oklch(0.14 0.03 200 / 0.90))",
+                  "linear-gradient(135deg, oklch(0.15 0.02 0 / 0.95), oklch(0.12 0.01 0 / 0.95))",
               }}
             >
               {/* Glow halo */}
@@ -101,13 +101,13 @@ export default function LandingPage() {
                 className="pointer-events-none absolute inset-0 rounded-2xl opacity-30 blur-2xl"
                 style={{
                   background:
-                    "radial-gradient(ellipse at 50% 0%, oklch(0.72 0.22 145), transparent 70%)",
+                    "radial-gradient(ellipse at 50% 0%, oklch(0.72 0.24 40), transparent 70%)",
                 }}
               />
 
               <div
                 className="relative flex h-14 w-14 items-center justify-center rounded-full shadow-md"
-                style={{ background: "oklch(0.62 0.25 145)", color: "white" }}
+                style={{ background: "oklch(0.65 0.22 40)", color: "white" }}
               >
                 <Users className="h-7 w-7" />
               </div>
@@ -115,7 +115,7 @@ export default function LandingPage() {
               <div className="relative text-center">
                 <div
                   className="text-5xl font-bold tabular-nums tracking-tight"
-                  style={{ color: "oklch(0.92 0.18 145)" }}
+                  style={{ color: "oklch(0.92 0.20 40)" }}
                 >
                   {isUsersLoading ? (
                     <span className="animate-pulse text-4xl text-white/40">
@@ -127,7 +127,7 @@ export default function LandingPage() {
                 </div>
                 <div
                   className="mt-1 text-base font-medium uppercase tracking-widest"
-                  style={{ color: "oklch(0.78 0.10 145)" }}
+                  style={{ color: "oklch(0.78 0.10 40)" }}
                 >
                   Users Registered
                 </div>
@@ -135,7 +135,7 @@ export default function LandingPage() {
 
               <p
                 className="relative max-w-xs text-center text-sm"
-                style={{ color: "oklch(0.68 0.06 200)" }}
+                style={{ color: "oklch(0.68 0.06 40)" }}
               >
                 Join our growing community helping reunite lost items with their
                 rightful owners.
@@ -153,7 +153,7 @@ export default function LandingPage() {
               <div className="flex flex-col items-center text-center space-y-4">
                 <div
                   className="flex h-16 w-16 items-center justify-center rounded-full shadow-lg"
-                  style={{ background: "oklch(0.62 0.25 145)", color: "white" }}
+                  style={{ background: "oklch(0.65 0.22 40)", color: "white" }}
                 >
                   <Search className="h-8 w-8" />
                 </div>
