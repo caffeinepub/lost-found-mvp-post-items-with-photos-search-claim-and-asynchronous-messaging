@@ -11,6 +11,7 @@ import { ItemType } from "./backend";
 import ProfileSetupDialog from "./components/auth/ProfileSetupDialog";
 import AppLayout from "./components/layout/AppLayout";
 import InstallPrompt from "./components/pwa/InstallPrompt";
+import UpdateBanner from "./components/pwa/UpdateBanner";
 import { useInternetIdentity } from "./hooks/useInternetIdentity";
 import AdminFeedbackPage from "./pages/AdminFeedbackPage";
 import BrowsePage from "./pages/BrowsePage";
@@ -42,6 +43,7 @@ function RootComponent() {
         <img src={pwaIconMaskable192} alt="" />
         <img src={pwaIconMaskable512} alt="" />
       </div>
+      <UpdateBanner />
       {isAuthenticated ? (
         <AppLayout>
           <ProfileSetupDialog />
