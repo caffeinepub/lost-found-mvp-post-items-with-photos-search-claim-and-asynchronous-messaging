@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { CheckCircle, MessageCircle, Search, Users } from "lucide-react";
+import heroBg from "/assets/generated/hero-bg-black-orange.dim_1600x700.jpg";
 import LoginButton from "../components/auth/LoginButton";
 import InstallPrompt from "../components/pwa/InstallPrompt";
 import { useGetRegisteredUsersCount } from "../hooks/useQueries";
@@ -31,8 +32,7 @@ export default function LandingPage() {
         <section
           className="relative overflow-hidden"
           style={{
-            backgroundImage:
-              "url('/assets/generated/hero-gradient-bg.dim_1600x700.jpg')",
+            backgroundImage: `url(${heroBg})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
