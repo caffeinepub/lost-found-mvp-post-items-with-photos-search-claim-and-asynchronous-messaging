@@ -1,4 +1,3 @@
-import type { Principal } from "@dfinity/principal";
 import { useCallback, useEffect, useState } from "react";
 import { serializeSubscription, subscribeToPush } from "../utils/webPush";
 import { useActor } from "./useActor";
@@ -18,19 +17,6 @@ export interface UsePushNotificationsReturn {
   unsubscribe: () => Promise<void>;
 }
 
-// Extended actor type to include push notification methods not in the generated backend
-interface ActorWithPush {
-  registerPushSubscription(
-    endpoint: string,
-    p256dh: string,
-    auth: string,
-  ): Promise<void>;
-  unregisterPushSubscription(endpoint: string): Promise<void>;
-  getRecipientPushSubscriptions(
-    recipient: Principal,
-  ): Promise<Array<{ endpoint: string; p256dh: string; auth: string }>>;
-}
-
 export function usePushNotifications(): UsePushNotificationsReturn {
   const { actor } = useActor();
   const { identity } = useInternetIdentity();
@@ -38,7 +24,6 @@ export function usePushNotifications(): UsePushNotificationsReturn {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Check current permission and subscription state on mount
   useEffect(() => {
     if (!("Notification" in window) || !("PushManager" in window)) {
       setPermission("unsupported");
@@ -69,11 +54,7 @@ export function usePushNotifications(): UsePushNotificationsReturn {
       const { endpoint, p256dh, auth } = serializeSubscription(sub);
       if (!p256dh || !auth) return;
 
-      await (actor as unknown as ActorWithPush).registerPushSubscription(
-        endpoint,
-        p256dh,
-        auth,
-      );
+      await actor.registerPushSubscription(endpoint, p256dh, auth);
       setIsSubscribed(true);
     } catch {
       // ignore
@@ -89,9 +70,7 @@ export function usePushNotifications(): UsePushNotificationsReturn {
       const reg = await navigator.serviceWorker.ready;
       const sub = await reg.pushManager.getSubscription();
       if (sub) {
-        await (actor as unknown as ActorWithPush).unregisterPushSubscription(
-          sub.endpoint,
-        );
+        await actor.unregisterPushSubscription(sub.endpoint);
         await sub.unsubscribe();
       }
       setIsSubscribed(false);
@@ -104,6 +83,3 @@ export function usePushNotifications(): UsePushNotificationsReturn {
 
   return { permission, isSubscribed, isLoading, subscribe, unsubscribe };
 }
-
-// Re-export the extended actor type for use in other modules
-export type { ActorWithPush };

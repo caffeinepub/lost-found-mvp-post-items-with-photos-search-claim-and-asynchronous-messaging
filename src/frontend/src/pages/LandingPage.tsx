@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { CheckCircle, MessageCircle, Search, Users } from "lucide-react";
 import heroBg from "/assets/generated/hero-bg-black-orange.dim_1600x700.jpg";
+import lostfoundLogo from "/assets/generated/lostfound-logo.dim_512x512.png";
 import LoginButton from "../components/auth/LoginButton";
 import InstallPrompt from "../components/pwa/InstallPrompt";
 import { useGetRegisteredUsersCount } from "../hooks/useQueries";
@@ -15,7 +16,7 @@ export default function LandingPage() {
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-3">
             <img
-              src="/assets/generated/lostfound-logo.dim_512x512.png"
+              src={lostfoundLogo}
               alt="Lost & Found"
               className="h-10 w-10 rounded-lg"
             />

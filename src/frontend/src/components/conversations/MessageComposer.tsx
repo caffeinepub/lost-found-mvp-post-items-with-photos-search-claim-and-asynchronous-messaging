@@ -6,7 +6,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useActor } from "../../hooks/useActor";
 import { useGetCallerUserProfile } from "../../hooks/useCurrentUser";
-import type { ActorWithPush } from "../../hooks/usePushNotifications";
 import { useSendMessage } from "../../hooks/useQueries";
 import { getUserFriendlyError } from "../../utils/errors";
 import type { PushSubscriptionData } from "../../utils/webPush";
@@ -29,9 +28,8 @@ export default function MessageComposer({
   const triggerPushNotification = async (text: string) => {
     if (!actor || !recipientPrincipal) return;
     try {
-      const pushActor = actor as unknown as ActorWithPush;
       const subs =
-        await pushActor.getRecipientPushSubscriptions(recipientPrincipal);
+        await actor.getRecipientPushSubscriptions(recipientPrincipal);
       if (!subs || subs.length === 0) return;
       const senderName = callerProfile?.name || "Someone";
       const payload = {

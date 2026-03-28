@@ -18,6 +18,7 @@ import {
   Search,
   ShieldCheck,
 } from "lucide-react";
+import lostfoundLogo from "/assets/generated/lostfound-logo.dim_512x512.png";
 import { useGetCallerUserProfile } from "../../hooks/useCurrentUser";
 import { useGetAllFeedback, useIsCallerAdmin } from "../../hooks/useFeedback";
 import { useInternetIdentity } from "../../hooks/useInternetIdentity";
@@ -62,7 +63,7 @@ export default function AppHeader() {
               className="flex items-center gap-3 transition-opacity hover:opacity-80"
             >
               <img
-                src="/assets/generated/lostfound-logo.dim_512x512.png"
+                src={lostfoundLogo}
                 alt="Lost & Found"
                 className="h-10 w-10 rounded-lg"
               />

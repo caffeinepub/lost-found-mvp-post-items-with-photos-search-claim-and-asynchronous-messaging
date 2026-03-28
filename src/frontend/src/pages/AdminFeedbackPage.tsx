@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
+import type { FeedbackEntryWithReadStatus } from "../backend";
 import { AdminStarRating } from "../components/StarRating";
-import type { FeedbackEntryWithReadStatus } from "../hooks/useFeedback";
 import { useGetAllFeedback, useIsCallerAdmin } from "../hooks/useFeedback";
 
 function truncatePrincipal(principal: { toString(): string }): string {
@@ -214,7 +214,7 @@ export default function AdminFeedbackPage() {
           variant="outline"
           size="sm"
           disabled={unreadCount === 0}
-          onClick={() => markAllAsRead(sorted)}
+          onClick={() => markAllAsRead()}
           className="gap-2"
         >
           <CheckCheck className="h-4 w-4" />

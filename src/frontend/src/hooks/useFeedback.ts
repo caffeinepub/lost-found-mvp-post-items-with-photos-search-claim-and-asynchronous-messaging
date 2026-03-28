@@ -1,27 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useCallback, useState } from "react";
-import type { FeedbackEntry } from "../backend";
+import type { FeedbackEntry, FeedbackEntryWithReadStatus } from "../backend";
 import { useActor } from "./useActor";
-
-const READ_KEY = "admin_feedback_read_ids";
-
-function getReadIds(): Set<string> {
-  try {
-    const raw = localStorage.getItem(READ_KEY);
-    if (!raw) return new Set();
-    return new Set(JSON.parse(raw) as string[]);
-  } catch {
-    return new Set();
-  }
-}
-
-function saveReadIds(ids: Set<string>) {
-  try {
-    localStorage.setItem(READ_KEY, JSON.stringify([...ids]));
-  } catch {
-    // ignore
-  }
-}
 
 export function useGetCallerFeedback() {
   const { actor, isFetching: actorFetching } = useActor();
@@ -72,15 +51,11 @@ export function useIsCallerAdmin() {
   });
 }
 
-export interface FeedbackEntryWithReadStatus extends FeedbackEntry {
-  isRead: boolean;
-}
-
 export function useGetAllFeedback() {
   const { actor, isFetching: actorFetching } = useActor();
-  const [readIds, setReadIds] = useState<Set<string>>(() => getReadIds());
+  const queryClient = useQueryClient();
 
-  const query = useQuery<FeedbackEntry[]>({
+  const query = useQuery<FeedbackEntryWithReadStatus[]>({
     queryKey: ["feedback", "all"],
     queryFn: async () => {
       if (!actor) return [];
@@ -90,36 +65,22 @@ export function useGetAllFeedback() {
     retry: false,
   });
 
-  const markAsRead = useCallback((id: bigint) => {
-    setReadIds((prev) => {
-      const next = new Set(prev);
-      next.add(id.toString());
-      saveReadIds(next);
-      return next;
-    });
-  }, []);
+  const markAsRead = async (id: bigint) => {
+    if (!actor) return;
+    await actor.markFeedbackAsRead(id);
+    queryClient.invalidateQueries({ queryKey: ["feedback", "all"] });
+  };
 
-  const markAllAsRead = useCallback((entries: FeedbackEntry[]) => {
-    setReadIds((prev) => {
-      const next = new Set(prev);
-      for (const e of entries) next.add(e.id.toString());
-      saveReadIds(next);
-      return next;
-    });
-  }, []);
+  const markAllAsRead = async () => {
+    if (!actor) return;
+    await actor.markAllFeedbackAsRead();
+    queryClient.invalidateQueries({ queryKey: ["feedback", "all"] });
+  };
 
-  const withStatus: FeedbackEntryWithReadStatus[] = (query.data ?? []).map(
-    (e) => ({
-      ...e,
-      isRead: readIds.has(e.id.toString()),
-    }),
-  );
-
-  const unreadCount = withStatus.filter((e) => !e.isRead).length;
+  const unreadCount = (query.data ?? []).filter((e) => !e.isRead).length;
 
   return {
     ...query,
-    data: withStatus,
     unreadCount,
     markAsRead,
     markAllAsRead,
